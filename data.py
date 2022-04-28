@@ -1,16 +1,17 @@
 import ccxt
 import numpy as np
 import pandas as pd
+import time
+from datetime import datetime
+import functions as f
 
-bitso = ccxt.bitso()
+btc_bitso = []
+for i in range(10):
+    x = f.get_btc_bitso(30,'BTC/USDT')
+    time.sleep(1)
+    btc_bitso.append(x)
+btc_bitso = pd.DataFrame(btc_bitso)
 
-limit = 30
+ts1 = btc_bitso['timestamp'].iloc[0]
 
-bi_btc_ob = bitso.fetch_order_book('BTC/USDT',limit=limit)
-
-bi_btc_ob_ask = pd.DataFrame(bi_btc_ob['asks'],columns=['price','quantity'])
-bi_btc_ob_bid = pd.DataFrame(bi_btc_ob['bids'],columns=['price','quantity'])
-
-bid = bi_btc_ob['bids'][0][0] if len(bi_btc_ob['bids']) > 0 else None
-ask = bi_btc_ob['bids'][0][0] if len(bi_btc_ob['asks']) > 0 else None
-spread = (ask - bid) if (ask and bid) else None
+ochlv_btc =f.get_ochlv_btc_bitso(ts1)
